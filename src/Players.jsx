@@ -2,7 +2,7 @@ import React from 'react'
 
 function Players() {
   return (
-    <div>Players</div>
+    <div>Playessrs</div>
   )
 }
 
