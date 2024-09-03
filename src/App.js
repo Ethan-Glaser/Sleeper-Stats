@@ -10,6 +10,7 @@ import Players from "./Players";
 import NFLTeams from "./NFLTeams";
 import ComparePlayers from "./ComparePlayers";
 import Home from "./Home";
+import JSONPlayers from './JSONPlayers.json'
 
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
     console.log('No roster found ' + id)
   }
 
+
+
   return (
     <Box>
       { UserID === '' && (<UserLogin setUserID={setUserID} />)}
@@ -80,7 +83,7 @@ function App() {
               {pages.map((page) => {
                 const El = pageComps[page.split(' ').join('')]
                 return(
-                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} getUser={getUser} getRoster={getRoster} getTeamName={getTeamName}/>} />
+                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} getUser={getUser} getRoster={getRoster} getTeamName={getTeamName} />} />
                 )
               })}
             </Routes>
