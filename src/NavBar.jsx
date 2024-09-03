@@ -28,12 +28,12 @@ function NavBar(props) {
 
     return (
     <AppBar position='static'>
-        <Container>
+        <Container maxWidth='xl'>
             <Toolbar disableGutters>
                 <Link to='/'>
                     <Typography> LOGO</Typography>
                 </Link>
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                <Box sx={{ flexGrow: 1 }}>
                     {props.pages.map((page) => (
                         <Link
                             sx={{ my: 2, color: 'white', display: 'block' }}
