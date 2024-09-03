@@ -28,7 +28,7 @@ function NavBar(props) {
 
     return (
     <AppBar position='static'>
-        <Container maxWidth='xl'>
+        <Container>
             <Toolbar disableGutters>
                 <Link to='/'>
                     <Typography> LOGO</Typography>
