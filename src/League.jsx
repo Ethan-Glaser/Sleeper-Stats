@@ -111,11 +111,13 @@ function League(props) {
     return (
         <Box>
             <Box>
+            <Typography>Matchups</Typography>
                 <List>
                     {matchups}
                 </List>
             </Box>
             <Box>
+            <Typography>Rankings</Typography>
                 <List>
                     {ranklist}
                 </List>
