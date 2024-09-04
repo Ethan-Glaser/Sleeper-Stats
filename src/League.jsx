@@ -70,8 +70,55 @@ function League(props) {
         matchups = []
         pair.forEach((value, key) => {
             matchups.push(
-                <ListItem>
-                    <Typography>{props.getTeamName(props.getUser(props.getRoster(value[0].roster_id)))} vs {props.getTeamName(props.getUser(props.getRoster(value[1].roster_id)))}</Typography>
+                <ListItem
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        backgroundColor: '#e0e0e0', // Light shade to make it pop
+                        borderRadius: 2,
+                        padding: '1.25rem',
+                        marginBottom: '1.5rem',
+                        boxShadow: 2,
+                        width: '100%', // Full width within its parent container
+                        '&:hover': {
+                            backgroundColor: '#bdbdbd', // Slightly darker on hover
+                        },
+                    }}
+                >
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            flex: 1,
+                            textAlign: 'left',
+                            color: '#333',
+                            fontWeight: 'bold',
+                            pl:'8px'
+                        }}
+                    >
+                        {props.getTeamName(props.getUser(props.getRoster(value[0].roster_id)))}</Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            mx: 2, // Margin on the sides of "vs"
+                            color: '#555',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        vs
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            flex: 1,
+                            textAlign: 'right',
+                            color: '#333',
+                            fontWeight: 'bold',
+                            pr:'8px'
+                        }}
+                    >
+                        {props.getTeamName(props.getUser(props.getRoster(value[1].roster_id)))}
+                    </Typography>
                 </ListItem>
         )})
     } else{
@@ -98,8 +145,33 @@ function League(props) {
 
     if(rankings && rankings.length > 0){
         ranklist = rankings.map((roster) =>(
-            <ListItem>
-                <Typography>{props.getTeamName(props.getUser(props.getRoster(roster.roster_id)))}</Typography>
+            <ListItem
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#e0e0e0', // Light background for each item
+                    border: '1px solid #ddd', // Border to separate items
+                    borderRadius: 2, // Rounded corners for each item
+                    padding: '.3rem', // Padding inside the item
+                    marginBottom: '0.5rem', // Space between items
+                    boxShadow: 1, // Subtle shadow for visual separation
+                    width: '100%', // Full width within its parent container
+                    '&:hover': {
+                        backgroundColor: '#bdbdbd', // Slightly darker on hover
+                    },
+                }}
+            >
+                <Typography
+                    variant="body1"
+                    sx={{
+                        color: '#333', // Dark color for readability
+                        fontWeight: 'bold', // Emphasize the text
+                        textAlign:'center'
+                    }}
+                >
+                    {props.getTeamName(props.getUser(props.getRoster(roster.roster_id)))}
+                </Typography>
             </ListItem>
         ))
     }else{
@@ -109,15 +181,55 @@ function League(props) {
 
 
     return (
-        <Box>
-            <Box>
-            <Typography>Matchups</Typography>
-                <List>
+        <Box sx={{width:'100%',display: 'flex',flexDirection: 'row',}}>
+            <Box
+                sx={{
+                    backgroundColor: '#fff', // White background for the container
+                    boxShadow: 3, // Elevation for visual separation
+                    borderRadius: 2, // Rounded corners
+                    padding: '2rem', // Padding inside the box
+                    margin: '1rem', // Margin to separate from elements above
+                    width: '100%', // Full width of the parent container
+                    maxWidth: 800, // Maximum width for better visual balance
+                    overflow: 'auto', // Allow scrolling if the content overflows
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        marginBottom: '1rem', // Spacing below the title
+                        fontWeight: 'bold', // Emphasize the title
+                        color: '#333', // Dark color for the title
+                    }}
+                >
+                    Matchups
+                </Typography>
+                <List sx={{width:'100%'}}>
                     {matchups}
                 </List>
             </Box>
-            <Box>
-            <Typography>Rankings</Typography>
+            <Box
+                sx={{
+                    backgroundColor: '#fff', // White background for the container
+                    boxShadow: 3, // Elevation for visual separation
+                    borderRadius: 2, // Rounded corners
+                    padding: '2rem', // Padding inside the box
+                    margin: '1rem', // Margin to separate from elements above
+                    width: '100%', // Full width of the parent container
+                    maxWidth: 800, // Maximum width for better visual balance
+                    overflow: 'auto', // Allow scrolling if the content overflows
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        marginBottom: '1rem', // Spacing below the title
+                        fontWeight: 'bold', // Emphasize the title
+                        color: '#333', // Dark color for the title
+                    }}
+                >
+                    Rankings
+                </Typography>
                 <List>
                     {ranklist}
                 </List>

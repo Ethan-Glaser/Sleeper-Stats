@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 import {AppBar, Container, Toolbar, Typography, Box, Menu, MenuItem, Tooltip, IconButton, Avatar, Button} from '@mui/material';
+import InsightsIcon from '@mui/icons-material/Insights';
 
 
 const settings = ['Switch User', 'Switch League'];
@@ -8,8 +9,10 @@ const settings = ['Switch User', 'Switch League'];
 function NavBar(props) {
 
     const [Open, setOpen] = useState(false)
+    const [anchorEl, setAnchorEl] = useState(null)
 
-    const handleOpenSettings = () => {
+    const handleOpenSettings = (event) => {
+        if(!Open) setAnchorEl(event.currentTarget); else setAnchorEl(null)
         setOpen(!Open)
     }
 
@@ -27,30 +30,56 @@ function NavBar(props) {
     }
 
     return (
-    <AppBar position='static'>
+    <AppBar  position="static" sx={{ backgroundColor: '#3f51b5', boxShadow: 3 }}>
         <Container maxWidth='xl'>
             <Toolbar disableGutters>
-                <Link to='/'>
-                    <Typography> LOGO</Typography>
+                <InsightsIcon />
+                <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography 
+                        variant="h6"
+                        noWrap
+                        sx={{
+                            ml: 2,
+                            fontWeight: 'bold',
+                            color: '#fff',
+                            letterSpacing: '.1rem',
+                        }}
+                    > 
+                        Sleeper Analytics
+                    </Typography>
                 </Link>
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
                     {props.pages.map((page) => (
                         <Link
-                            sx={{ my: 2, color: 'white', display: 'block' }}
+                            style={{ textDecoration: 'none', color: 'inherit' }}
                             to={'/' + page.split(' ').join('').toLowerCase()}
                         >
-                            {page}
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    my: 2,
+                                    mx: 2,
+                                    color: '#fff',
+                                    '&:hover': {
+                                        color: '#ffeb3b',
+                                        textDecoration: 'underline',
+                                    },
+                                }}
+                            >
+                                {page}
+                            </Typography>
                         </Link>
                     ))}
                 </Box>
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Account Settings">
                         <IconButton onClick={handleOpenSettings} sx={{ p: 0 }}>
-                            <Avatar />
+                            <Avatar sx={{ bgcolor: '#ffeb3b', color: '#3f51b5' }}/>
                         </IconButton>
                     </Tooltip>
                     <Menu 
                         open={Open}
+                        anchorEl={anchorEl}
                         sx={{ mt: '45px' }}
                         anchorOrigin={{
                             vertical: 'top',
@@ -64,8 +93,16 @@ function NavBar(props) {
                         onClose={handleOpenSettings}
                     >
                         {settings.map((setting) => (
-                            <MenuItem key={setting}  onClick={() => handleSettingsChange(setting)}>
-                            <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                            <MenuItem 
+                                key={setting}  
+                                onClick={() => handleSettingsChange(setting)}
+                                sx={{
+                                    '&:hover': {
+                                        backgroundColor: '#f5f5f5',
+                                    },
+                                }}
+                            >
+                            <Typography sx={{ textAlign: 'center', color: '#3f51b5' }}>{setting}</Typography>
                             </MenuItem>
                         ))}
                     </Menu>

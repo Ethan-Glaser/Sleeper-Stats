@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Box, Typography, ListSubheader , List,  ListItemButton, ListItemIcon, ListItemText} from '@mui/material'
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 
 function LeagueSelect(props) {
 
@@ -59,13 +60,37 @@ function LeagueSelect(props) {
 
     if (Leagues && Leagues.length > 0){
         LeagueList = Leagues.map((league) => (
-            <ListItemButton onClick={() => leagueClick(league.league_id)}>
-                <ListItemIcon>
-    
+            <ListItemButton 
+                onClick={() => leagueClick(league.league_id)}
+                sx={{
+                    padding: '0.75rem',
+                    marginBottom: '0.5rem',
+                    borderRadius: '8px',
+                    backgroundColor: '#fff',
+                    boxShadow: 1,
+                    '&:hover': {
+                        backgroundColor: '#f0f0f0',
+                    },
+                    '&:focus': {
+                        backgroundColor: '#e0e0e0',
+                    },
+                }}
+            >
+                <ListItemIcon
+                    sx={{ 
+                        color: '#3f51b5',
+                        minWidth: '40px',
+                    }}
+                >
+                    <SportsFootballIcon />
                 </ListItemIcon>
-                <ListItemText>
-                    {league.name}
-                </ListItemText>
+                <ListItemText
+                    primary={league.name}
+                    sx={{
+                        color: '#3f51b5',
+                        fontWeight: 'bold',
+                    }}
+                />
             </ListItemButton>
         ))
     } else {
@@ -75,10 +100,47 @@ function LeagueSelect(props) {
    
 
     return (
-        <Box>
-            <Typography>Select League</Typography>
-            <List>
-                <ListSubheader>
+        <Box
+            sx={{
+                width: '100%',
+                maxWidth: '400px',
+                margin: 'auto',
+                padding: '2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: 3,
+                borderRadius: 2,
+                backgroundColor: '#fff',
+            }}
+        >
+            <Typography
+                variant="h5" 
+                component="h1" 
+                gutterBottom 
+                sx={{ 
+                    fontWeight: 'bold', 
+                    color: '#3f51b5' 
+                }}
+            >
+                Select League
+            </Typography>
+            <List
+                sx={{ 
+                    width: '100%', 
+                    backgroundColor: '#f5f5f5', 
+                    borderRadius: 1, 
+                    boxShadow: 1 
+                }}
+            >
+                <ListSubheader
+                    sx={{ 
+                        backgroundColor: '#3f51b5', 
+                        color: '#fff', 
+                        fontWeight: 'bold' 
+                    }}
+                >
                     Leagues
                 </ListSubheader>
                 {LeagueList}

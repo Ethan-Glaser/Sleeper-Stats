@@ -2,7 +2,7 @@ import UserLogin from "./UserLogin";
 import LeagueSelect from "./LeagueSelect";
 import NavBar from "./NavBar";
 import React, {useState, useEffect} from 'react';
-import {Box} from '@mui/material';
+import {Box, Container} from '@mui/material';
 import { Routes, Route, Link } from 'react-router-dom';
 import League from "./League";
 import Team from "./Team";
@@ -10,7 +10,6 @@ import Players from "./Players";
 import NFLTeams from "./NFLTeams";
 import ComparePlayers from "./ComparePlayers";
 import Home from "./Home";
-import JSONPlayers from './JSONPlayers.json'
 
 
 function App() {
@@ -71,13 +70,33 @@ function App() {
 
 
   return (
-    <Box>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+        padding: '4px',
+      }}
+    >
       { UserID === '' && (<UserLogin setUserID={setUserID} />)}
       { UserID !== '' && LeagueID === '' && (<LeagueSelect setLeagueID={setLeagueID} UserID={UserID} NFLState={NFLState} setUsers={setUsers} setRosters={setRosters} />)}
       { UserID !== '' && LeagueID !== '' && Users && Rosters && Users.length > 0 && Rosters.length > 0 && (
         <>
           <NavBar pages={pages} setUserID={setUserID} setLeagueID={setLeagueID} setUsers={setUsers} setRosters={setRosters} />
-          <Box>
+          <Box
+            sx={{
+                width: '96%',
+                flexGrow: 1,
+                padding: '2rem',
+                backgroundColor: '#fafafa',
+                boxShadow: 2,
+                borderRadius: 2,
+                mt: '1rem',
+            }}
+          >
             <Routes>
               <Route path='/' element={<Home />} />
               {pages.map((page) => {
