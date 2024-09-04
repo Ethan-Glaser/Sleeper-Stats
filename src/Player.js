@@ -1,5 +1,6 @@
 import JSONPlayers from './JSONPlayers.json';
 import JSONESPNPlayers from './JSONESPNPlayers.json'
+import NFLTeam from './NFLTeam'
 
 /*
 
@@ -27,13 +28,14 @@ class Player {
         let p = JSONPlayers[id];
         this._name = p.first_name + ' ' + p.last_name;
         this._position = p.position;
-        this._team = p.team;
+        let t = p.team
+        if(t === 'WAS') t = 'WSH'           //Washington Commanders issue
+        if(t) this._team = new NFLTeam(t); else this._team = null;
         this._number = p.number;
         this._age = p.age;
         this._sleeperID = id;
-        let x = JSONESPNPlayers.items.find(obj => obj.fullName.includes(p.first_name + ' ' + p.last_name) && obj.jersey === p.number.toString())
-        console.log(p.first_name + ' ' + p.last_name + ' ' + p.number.toString())
-        console.log(x)
+        let x 
+        if(p.number) x = JSONESPNPlayers.items.find(obj => obj.fullName.includes(p.first_name + ' ' + p.last_name) && obj.jersey === p.number.toString()); else x=null
         if(x) this._espnID = x.id; else this._espnID = null;
         
     }
@@ -70,11 +72,7 @@ class Player {
     }
 
     set team(newTeam) {
-        if (typeof newTeam === 'string' && newTeam.trim() !== '') {
-            this._team = newTeam;
-        } else {
-            console.error('Team must be a non-empty string');
-        }
+        this._team = newTeam;
     }
 
     // Getter and Setter for number

@@ -4,7 +4,7 @@ import {AppBar, Container, Toolbar, Typography, Box, Menu, MenuItem, Tooltip, Ic
 import InsightsIcon from '@mui/icons-material/Insights';
 
 
-const settings = ['Switch User', 'Switch League'];
+const settings = ['Switch User', 'Switch League', 'Refresh'];
 
 function NavBar(props) {
 

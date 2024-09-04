@@ -46,7 +46,7 @@ function Team(props) {
       let p = new Player(value)
       starterlist.push(
         <ListItem>
-          <Typography>{p.name} {p.position} {p.team}</Typography>
+          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
         </ListItem>
       )
     })
@@ -55,7 +55,7 @@ function Team(props) {
       let p = new Player(value)
       benchlist.push(
         <ListItem>
-          <Typography>{p.name} {p.position} {p.team}</Typography>
+          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
         </ListItem>
       )
     })
@@ -64,7 +64,7 @@ function Team(props) {
       let p = new Player(value)
       taxilist.push(
         <ListItem>
-          <Typography>{p.name} {p.position} {p.team}</Typography>
+          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
         </ListItem>
       )
     })
