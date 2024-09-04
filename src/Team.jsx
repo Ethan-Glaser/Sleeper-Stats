@@ -39,7 +39,6 @@ function Team(props) {
     let starterlist = []
     let benchlist = []
     let taxilist = []
-    console.log(roster.roster_id)
     if(!roster.starters) roster.starters = []
     if(!roster.taxi) roster.taxi = []
     if(!roster.players) roster.players = []
