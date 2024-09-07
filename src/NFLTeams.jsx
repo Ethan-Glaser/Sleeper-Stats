@@ -74,14 +74,16 @@ function NFLTeams() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#'+team.color,
+        backgroundColor: '#fff',
+        backgroundImage: 'linear-gradient(135deg, #' + team.altcolor + ', #'+ team.color +', #'+ team.color +', #'+ team.altcolor + ')',
         borderRadius: 2,
         padding: '1.25rem',
         marginBottom: '1.5rem',
         boxShadow: 2,
         width: '100%', // Full width within its parent container
         '&:hover': {
-            backgroundColor: lightenColor('#'+team.color, 20),
+          backgroundColor: '#fff',
+          backgroundImage: 'linear-gradient(135deg, '+ lightenColor('#' + team.altcolor, 20) + ', ' + lightenColor('#'+ team.color, 20) +', '+ lightenColor('#'+ team.color, 20) +', '+ lightenColor('#'+ team.altcolor, 20) + ')',
         },
       }}
       >
@@ -90,11 +92,11 @@ function NFLTeams() {
           sx={{
               flex: 1,
               textAlign: 'center',
-              color: '#' + team.altcolor,
+              color: '#fefefe',
               fontWeight: 'bold',
           }}
         >
-          {team.location} {team.name}
+        {team.location} {team.name}
         </Typography>
       </ListItem>
     ))
@@ -104,8 +106,8 @@ function NFLTeams() {
 
 
   return (
-    <Box>
-      <List>
+    <Box sx={{display:'flex', justifyContent:'center', width:'100%',  alignItems: 'center'}}>
+      <List sx={{width:'100%', maxWidth: 1000}}>
         {row}
       </List>
     </Box>

@@ -22,6 +22,22 @@ function Team(props) {
 
   }
 
+  function lightenColor(hex, percent) {
+    // Convert hex to RGB
+    const num = parseInt(hex.slice(1), 16),
+          r = (num >> 16) + Math.round((255 - (num >> 16)) * percent / 100),
+          g = ((num >> 8) & 0x00FF) + Math.round((255 - ((num >> 8) & 0x00FF)) * percent / 100),
+          b = (num & 0x0000FF) + Math.round((255 - (num & 0x0000FF)) * percent / 100);
+  
+    // Ensure RGB values are within 0-255
+    const newR = (r > 255) ? 255 : r;
+    const newG = (g > 255) ? 255 : g;
+    const newB = (b > 255) ? 255 : b;
+  
+    // Convert back to hex and return
+    return "#" + ((1 << 24) + (newR << 16) + (newG << 8) + newB).toString(16).slice(1).toUpperCase();
+  }
+
   const rosterNames = props.Rosters.map((roster) =>(
     <MenuItem value={roster.roster_id}>{props.getTeamName(props.getUser(roster))}</MenuItem>
   ))
@@ -45,8 +61,43 @@ function Team(props) {
     roster.starters.forEach((value, index, arr)=>{
       let p = new Player(value)
       starterlist.push(
-        <ListItem>
-          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
+        <ListItem
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            padding: '1rem',
+            marginBottom: '0.5rem',
+            backgroundColor: '#fff',
+            backgroundImage: 'linear-gradient(135deg, #' + p.team.color + ', #'+ p.team.altcolor + ')',
+            borderRadius: '8px',
+            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+            width: '100%',
+            maxWidth: '600px',
+            '&:hover': {
+              backgroundColor: '#fff',
+              backgroundImage: 'linear-gradient(135deg, ' + lightenColor('#' + p.team.color, 20) + ', ' + lightenColor('#'+ p.team.altcolor, 20) + ')'
+            },
+          }}
+        >
+          <Typography
+             variant="body1"
+             sx={{
+               fontWeight: 'bold',
+               color: '#fefefe', // Main player name styling
+             }}
+          >
+            {p.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#ccc', // Lighter color for the team and position
+              fontSize: '0.875rem', // Smaller font size for team and position
+            }}
+          >
+            {p.position} - {p.team.abbreviation}
+          </Typography>
         </ListItem>
       )
     })
@@ -54,8 +105,43 @@ function Team(props) {
     roster.players.filter(itm=> !roster.starters.includes(itm)).filter(itm=> !roster.taxi.includes(itm)).forEach((value, index, arr)=>{
       let p = new Player(value)
       benchlist.push(
-        <ListItem>
-          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
+        <ListItem
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            padding: '1rem',
+            marginBottom: '0.5rem',
+            backgroundColor: '#fff',
+            backgroundImage: 'linear-gradient(135deg, #' + p.team.color + ', #'+ p.team.altcolor + ')',
+            borderRadius: '8px',
+            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+            width: '100%',
+            maxWidth: '600px',
+            '&:hover': {
+              backgroundColor: '#fff',
+              backgroundImage: 'linear-gradient(135deg, ' + lightenColor('#' + p.team.color, 20) + ', ' + lightenColor('#'+ p.team.altcolor, 20) + ')'
+            },
+          }}
+        >
+          <Typography
+             variant="body1"
+             sx={{
+               fontWeight: 'bold',
+               color: '#fefefe', // Main player name styling
+             }}
+          >
+            {p.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#ccc', // Lighter color for the team and position
+              fontSize: '0.875rem', // Smaller font size for team and position
+            }}
+          >
+            {p.position} - {p.team.abbreviation}
+          </Typography>
         </ListItem>
       )
     })
@@ -63,8 +149,43 @@ function Team(props) {
     roster.taxi.forEach((value, index, arr)=>{
       let p = new Player(value)
       taxilist.push(
-        <ListItem>
-          <Typography>{p.name} {p.position} {p.team.abbreviation}</Typography>
+        <ListItem
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            padding: '1rem',
+            marginBottom: '0.5rem',
+            backgroundColor: '#fff',
+            backgroundImage: 'linear-gradient(135deg, #' + p.team.color + ', #'+ p.team.altcolor + ')',
+            borderRadius: '8px',
+            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+            width: '100%',
+            maxWidth: '600px',
+            '&:hover': {
+              backgroundColor: '#fff',
+              backgroundImage: 'linear-gradient(135deg, ' + lightenColor('#' + p.team.color, 20) + ', ' + lightenColor('#'+ p.team.altcolor, 20) + ')'
+            },
+          }}
+        >
+          <Typography
+             variant="body1"
+             sx={{
+               fontWeight: 'bold',
+               color: '#fefefe', // Main player name styling
+             }}
+          >
+            {p.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#ccc', // Lighter color for the team and position
+              fontSize: '0.875rem', // Smaller font size for team and position
+            }}
+          >
+            {p.position} - {p.team.abbreviation}
+          </Typography>
         </ListItem>
       )
     })
@@ -72,29 +193,36 @@ function Team(props) {
   }
 
   return(
-    <Box>
-      <FormControl>
+    <Box sx={{width:'100%',display: 'grid',flexDirection: 'row', columnGap: '50px'}}>
+      <FormControl  sx={{ marginBottom: '1.5rem' , gridColumnStart: 1, gridColumnEnd:2}}>
         <InputLabel></InputLabel>
         <Select
           value={selectedRosterID}
           onChange={handleTeamSelect}
+          variant="outlined"
         >
           {rosterNames}
         </Select>
       </FormControl>
-      <Typography>Lineup</Typography>
-      <List>
-        {Starters}
-      </List>
-      <Typography>Bench</Typography>
-      <List>
-        {Bench}
-      </List>
-      <Typography>Taxi</Typography>
-      <List>
-        {Taxi}
-      </List>
-
+      <Typography variant="h5" sx={{ marginBottom: '1rem', fontWeight: 'bold', gridColumnStart: 1, gridColumnEnd:2}}>Lineup</Typography>
+      <Box sx={{ marginBottom: '2rem', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)' , gridColumnStart: 1, gridColumnEnd:2}}>
+        <Typography variant="h6" sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Starters</Typography>
+        <List>
+          {Starters}
+        </List>
+        </Box>
+      <Box sx={{ marginBottom: '2rem', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)', gridColumnStart: 2, gridColumnEnd:3 }}>
+        <Typography variant="h6" sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Bench</Typography>
+        <List>
+          {Bench}
+        </List>
+      </Box>
+      <Box sx={{ marginBottom: '2rem', backgroundColor: '#fff', padding: '1rem', borderRadius: '8px', boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)', gridColumnStart: 3, gridColumnEnd:4 }}>
+        <Typography variant="h6" sx={{ marginBottom: '1rem', fontWeight: 'bold' }}>Taxi</Typography>
+        <List >
+          {Taxi}
+        </List>
+      </Box>
     </Box>
   )
 
