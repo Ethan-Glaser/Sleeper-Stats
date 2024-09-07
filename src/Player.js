@@ -34,6 +34,8 @@ class Player {
         this._number = p.number;
         this._age = p.age;
         this._sleeperID = id;
+        this._seasonStats = [];
+        this._weeklyStats = [];
         let x 
         if(p.number) x = JSONESPNPlayers.items.find(obj => obj.fullName.includes(p.first_name + ' ' + p.last_name) && obj.jersey === p.number.toString()); else x=null
         if(x) this._espnID = x.id; else this._espnID = null;
@@ -120,6 +122,58 @@ class Player {
             this._espnID = newEID;
         } else {
             console.error('Name must be a non-empty string');
+        }
+    }
+
+    get seasonStats(){
+        return this._seasonStats
+    }
+
+    set seasonStats(newStat){
+        this._seasonStats =newStat
+    }
+
+    get weeklyStats(){
+        return this._weeklyStats
+    }
+
+    set weeklyStats(newStat){
+        this._weeklyStats =newStat
+    }
+
+    async fetchWeeklyStats(season){
+        const response = await fetch('https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/'+ season + '/athletes/'+ this._espnID+'/eventlog')
+        if (!response.ok){
+            throw new Error('Stats Fetch Error')
+        }
+        const events = await response.json()
+        const weekdata = {}
+        for(let i = 0; i < events.events.count; i++){
+            if(events.events.items[i].played){
+                const eventresp = await fetch(events.events.items[i].statistics.$ref)
+                if (!eventresp.ok){
+                    throw new Error('Stats Fetch Error')
+                }
+                const wdata = await eventresp.json()
+                weekdata[i+1] = wdata.splits.categories
+            } else{
+                weekdata[i+1] = null
+            }
+        }
+        this._weeklyStats = weekdata
+    }
+    
+    async fetchSeasonStats(season){
+        try{
+            const response = await fetch('http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/' + season+ '/types/2/teams/' + this._team._ESPNID +'/athletes/'+ this._espnID+'/statistics')
+            if (!response.ok){
+                throw new Error('Stats Fetch Error')
+            }
+            const seasondata = await response.json()
+            this._seasonStats = seasondata.splits.categories
+
+        } catch (error){
+            console.error('Error:', error + ' : ' + this._name)
         }
     }
 }
