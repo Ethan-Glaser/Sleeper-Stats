@@ -165,7 +165,7 @@ class Player {
     
     async fetchSeasonStats(season){
         try{
-            const response = await fetch('http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/' + season+ '/types/2/teams/' + this._team._ESPNID +'/athletes/'+ this._espnID+'/statistics')
+            const response = await fetch('https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/' + season+ '/types/2/teams/' + this._team._ESPNID +'/athletes/'+ this._espnID+'/statistics')
             if (!response.ok){
                 throw new Error('Stats Fetch Error')
             }
