@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Box, TextField, Typography, Button} from '@mui/material'
+import {TextField, Typography, Button} from '@mui/material'
+import ContentBox from './style/ContentBox';
 
 function UserLogin(props) {
 
@@ -21,31 +22,25 @@ function UserLogin(props) {
     function handleUsernameInput(event){
         setUsername(event.target.value)
     }
-
+    
     return (
-    <Box
+    <ContentBox
         sx={{
             width: '100%',
             maxWidth: '400px',
             margin: 'auto',
-            padding: '2rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: 3,
-            borderRadius: 2,
-            backgroundColor: '#fff',
         }}
     >
         <Typography
             variant="h5" 
             component="h1" 
             gutterBottom 
+            textAlign='center'
             sx={{ 
                 fontWeight: 'bold', 
-                color: '#3f51b5' 
-            }}
+                color: 'text.primary',
+                mb:1 
+            }} 
         >
             Sleeper User Name
         </Typography>
@@ -59,17 +54,17 @@ function UserLogin(props) {
         />
         <Button 
             variant="contained" 
-            onClick={(event) => login()}
+            onClick={() => login()}
             fullWidth 
-            color="primary" 
             sx={{ 
                 marginTop: '1rem', 
-                padding: '0.75rem' 
+                padding: '0.75rem',
+                backgroundColor: 'alt.main' 
             }} 
         >
             Log In
         </Button>
-    </Box>
+    </ContentBox>
     )
 }
 

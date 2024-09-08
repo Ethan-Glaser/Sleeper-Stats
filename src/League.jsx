@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import { Box, List, ListItem, Typography } from '@mui/material'
+import ContentBox from './style/ContentBox'
+import HeaderText from './style/HeaderText'
+import { getTeamName, getUser, getRoster } from './Helper'
 
 function League(props) {
 
@@ -96,7 +99,7 @@ function League(props) {
                             pl:'8px'
                         }}
                     >
-                        {props.getTeamName(props.getUser(props.getRoster(value[0].roster_id)))}</Typography>
+                        {getTeamName(getUser(getRoster(value[0].roster_id, props.Rosters), props.Users))}</Typography>
                     <Typography
                         variant="body1"
                         sx={{
@@ -117,7 +120,7 @@ function League(props) {
                             pr:'8px'
                         }}
                     >
-                        {props.getTeamName(props.getUser(props.getRoster(value[1].roster_id)))}
+                        {getTeamName(getUser(getRoster(value[1].roster_id, props.Rosters),props.Users))}
                     </Typography>
                 </ListItem>
         )})
@@ -170,7 +173,7 @@ function League(props) {
                         textAlign:'center'
                     }}
                 >
-                    {props.getTeamName(props.getUser(props.getRoster(roster.roster_id)))}
+                    {getTeamName(getUser(getRoster(roster.roster_id, props.Rosters), props.Users))}
                 </Typography>
             </ListItem>
         ))
@@ -182,61 +185,18 @@ function League(props) {
 
     return (
         <Box sx={{width:'100%',display: 'flex',flexDirection: 'row',}}>
-            <Box
-                sx={{
-                    backgroundColor: '#fff', // White background for the container
-                    boxShadow: 3, // Elevation for visual separation
-                    borderRadius: 2, // Rounded corners
-                    padding: '2rem', // Padding inside the box
-                    margin: '1rem', // Margin to separate from elements above
-                    width: '100%', // Full width of the parent container
-                    maxWidth: 800, // Maximum width for better visual balance
-                    overflow: 'auto', // Allow scrolling if the content overflows
-                }}
-            >
-                <Typography
-                    variant="h6"
-                    sx={{
-                        marginBottom: '1rem', // Spacing below the title
-                        fontWeight: 'bold', // Emphasize the title
-                        color: '#333', // Dark color for the title
-                    }}
-                >
-                    Matchups
-                </Typography>
+            <ContentBox sx={{width: '100%', maxWidth: 800, overflow: 'auto'}}>
+                <HeaderText>Matchups</HeaderText>
                 <List sx={{width:'100%'}}>
                     {matchups}
                 </List>
-            </Box>
-            <Box
-                sx={{
-                    backgroundColor: '#fff', // White background for the container
-                    boxShadow: 3, // Elevation for visual separation
-                    borderRadius: 2, // Rounded corners
-                    padding: '2rem', // Padding inside the box
-                    margin: '1rem', // Margin to separate from elements above
-                    width: '100%', // Full width of the parent container
-                    maxWidth: 800, // Maximum width for better visual balance
-                    overflow: 'auto', // Allow scrolling if the content overflows
-                }}
-            >
-                <Typography
-                    variant="h6"
-                    sx={{
-                        marginBottom: '1rem', // Spacing below the title
-                        fontWeight: 'bold', // Emphasize the title
-                        color: '#333', // Dark color for the title
-                    }}
-                >
-                    Rankings
-                </Typography>
+            </ContentBox>
+            <ContentBox sx={{width: '100%', maxWidth: 800, overflow: 'auto'}}>
+                <HeaderText>Rankings</HeaderText>
                 <List>
                     {ranklist}
                 </List>
-            </Box>
-            <Box>
-                
-            </Box>
+            </ContentBox>
         </Box>
     )
 }

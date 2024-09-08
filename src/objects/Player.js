@@ -1,5 +1,5 @@
-import JSONPlayers from './JSONPlayers.json';
-import JSONESPNPlayers from './JSONESPNPlayers.json'
+import JSONPlayers from '../data/JSONPlayers.json';
+import JSONESPNPlayers from '../data/JSONESPNPlayers.json'
 import NFLTeam from './NFLTeam'
 
 /*

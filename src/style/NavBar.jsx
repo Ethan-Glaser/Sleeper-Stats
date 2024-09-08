@@ -6,6 +6,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 
 const settings = ['Switch User', 'Switch League', 'Refresh'];
 
+
 function NavBar(props) {
 
     const [Open, setOpen] = useState(false)
@@ -30,7 +31,7 @@ function NavBar(props) {
     }
 
     return (
-    <AppBar  position="static" sx={{ backgroundColor: '#3f51b5', boxShadow: 3 }}>
+    <AppBar  position="static" sx={{ backgroundColor: 'secondary.main', boxShadow: 3 }}>
         <Container maxWidth='xl'>
             <Toolbar disableGutters>
                 <InsightsIcon />
@@ -51,21 +52,10 @@ function NavBar(props) {
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
                     {props.pages.map((page) => (
                         <Link
-                            style={{ textDecoration: 'none', color: 'inherit' }}
+                            style={{textDecoration: 'none', color: 'inherit' }}
                             to={'/' + page.split(' ').join('').toLowerCase()}
                         >
-                            <Typography
-                                variant="body1"
-                                sx={{
-                                    my: 2,
-                                    mx: 2,
-                                    color: '#fff',
-                                    '&:hover': {
-                                        color: '#ffeb3b',
-                                        textDecoration: 'underline',
-                                    },
-                                }}
-                            >
+                            <Typography variant="navigation" sx={{m:2}}>
                                 {page}
                             </Typography>
                         </Link>
@@ -74,7 +64,7 @@ function NavBar(props) {
                 <Box sx={{ flexGrow: 0 }}>
                     <Tooltip title="Account Settings">
                         <IconButton onClick={handleOpenSettings} sx={{ p: 0 }}>
-                            <Avatar sx={{ bgcolor: '#ffeb3b', color: '#3f51b5' }}/>
+                            <Avatar sx={{ bgcolor: '#fff', color: '#182233' }}/>
                         </IconButton>
                     </Tooltip>
                     <Menu 

@@ -1,8 +1,8 @@
-import ESPNTeams from './ESPNTeams.json';
+import ESPNTeams from '../data/ESPNTeams.json';
 
 class Team {
     constructor(abv) {
-        let x = ESPNTeams.sports[0].leagues[0].teams.find(obj => obj.team.abbreviation == abv);
+        let x = ESPNTeams.sports[0].leagues[0].teams.find(obj => obj.team.abbreviation === abv);
         this._name = x.team.name;
         this._abbreviation = x.team.abbreviation;
         this._location = x.team.location;

@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {Box, Typography, ListSubheader , List,  ListItemButton, ListItemIcon, ListItemText} from '@mui/material'
+import {Typography, ListSubheader , List,  ListItemButton, ListItemIcon, ListItemText} from '@mui/material'
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
+import ContentBox from './style/ContentBox';
+import { lightenColor } from './Helper';
 
 function LeagueSelect(props) {
 
@@ -66,19 +68,19 @@ function LeagueSelect(props) {
                     padding: '0.75rem',
                     marginBottom: '0.5rem',
                     borderRadius: '8px',
-                    backgroundColor: '#fff',
+                    backgroundColor: 'alt.main',
                     boxShadow: 1,
                     '&:hover': {
-                        backgroundColor: '#f0f0f0',
+                        backgroundColor: 'alt.light',
                     },
                     '&:focus': {
-                        backgroundColor: '#e0e0e0',
+                        backgroundColor: 'alt.lightest',
                     },
                 }}
             >
                 <ListItemIcon
                     sx={{ 
-                        color: '#3f51b5',
+                        color: 'text.secondary',
                         minWidth: '40px',
                     }}
                 >
@@ -87,7 +89,7 @@ function LeagueSelect(props) {
                 <ListItemText
                     primary={league.name}
                     sx={{
-                        color: '#3f51b5',
+                        color: 'text.secondary',
                         fontWeight: 'bold',
                     }}
                 />
@@ -100,19 +102,12 @@ function LeagueSelect(props) {
    
 
     return (
-        <Box
+        <ContentBox
             sx={{
                 width: '100%',
                 maxWidth: '400px',
                 margin: 'auto',
-                padding: '2rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: 3,
-                borderRadius: 2,
-                backgroundColor: '#fff',
+                p:3
             }}
         >
             <Typography
@@ -121,31 +116,30 @@ function LeagueSelect(props) {
                 gutterBottom 
                 sx={{ 
                     fontWeight: 'bold', 
-                    color: '#3f51b5' 
+                    color: 'text.primary',
+                    textAlign: 'center'
                 }}
             >
                 Select League
             </Typography>
             <List
                 sx={{ 
-                    width: '100%', 
-                    backgroundColor: '#f5f5f5', 
-                    borderRadius: 1, 
-                    boxShadow: 1 
+                    width: '100%',  
                 }}
             >
                 <ListSubheader
                     sx={{ 
-                        backgroundColor: '#3f51b5', 
-                        color: '#fff', 
-                        fontWeight: 'bold' 
+                        backgroundColor: 'secondary.main', 
+                        color: 'text.primary', 
+                        fontWeight: 'bold',
+                        textAlign: 'center'
                     }}
                 >
                     Leagues
                 </ListSubheader>
                 {LeagueList}
             </List>
-        </Box>
+        </ContentBox>
     )
 }
 

@@ -1,8 +1,8 @@
 import UserLogin from "./UserLogin";
 import LeagueSelect from "./LeagueSelect";
-import NavBar from "./NavBar";
+import NavBar from "./style/NavBar";
 import React, {useState, useEffect} from 'react';
-import {Box, Container} from '@mui/material';
+import {Box} from '@mui/material';
 import { Routes, Route, Link } from 'react-router-dom';
 import League from "./League";
 import Team from "./Team";
@@ -10,12 +10,21 @@ import Players from "./Players";
 import NFLTeams from "./NFLTeams";
 import ComparePlayers from "./ComparePlayers";
 import Home from "./Home";
-import Player from "./Player";
-import JSONPlayers from './JSONPlayers.json';
+import Player from "./objects/Player";
+import JSONPlayers from './data/JSONPlayers.json';
 
 function App() {
 
   const[NFLState, setNFLState] = useState({})
+  const [UserID, setUserID] = useState('')
+  const [LeagueID, setLeagueID] = useState('')
+  const [Users, setUsers] = useState([])
+  const [Rosters, setRosters] = useState([])
+
+  const [FullPlayerList, setFullPlayerList] = useState([])
+
+  const pages = ['League', 'Team', 'Players', 'NFL Teams', 'Compare Players'];
+  const pageComps = {League, Team, Players, NFLTeams, ComparePlayers}
 
   useEffect(() => {
     fetchState()
@@ -46,44 +55,6 @@ function App() {
     }
   }
 
-  const [UserID, setUserID] = useState('')
-  const [LeagueID, setLeagueID] = useState('')
-  const [Users, setUsers] = useState([])
-  const [Rosters, setRosters] = useState([])
-
-  const [FullPlayerList, setFullPlayerList] = useState([])
-
-  const pages = ['League', 'Team', 'Players', 'NFL Teams', 'Compare Players'];
-  const pageComps = {League, Team, Players, NFLTeams, ComparePlayers}
-
-
-  const getTeamName = (user) => {
-    if(user.metadata.team_name){
-      return user.metadata.team_name
-    }
-    return 'Team ' + user.display_name
-  }
-
-  const getUser = (roster) => {
-    for(let user in Users){
-      if(roster.owner_id === Users[user].user_id){
-        return Users[user]
-      }
-    }
-    console.log('No user found ' + roster.owner_id)
-  }
-
-  const getRoster = (id) =>{
-    for(let roster in Rosters){
-      if(Rosters[roster].roster_id === id){
-        return Rosters[roster]
-      }
-    }
-    console.log('No roster found ' + id)
-  }
-
-
-
   return (
     <Box
       sx={{
@@ -92,7 +63,7 @@ function App() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f5f5f5',
+        backgroundColor:'background.default',
         padding: '4px',
       }}
     >
@@ -107,7 +78,6 @@ function App() {
                 width: '96%',
                 flexGrow: 1,
                 padding: '2rem',
-                backgroundColor: '#fafafa',
                 boxShadow: 2,
                 borderRadius: 2,
                 mt: '1rem',
@@ -118,15 +88,13 @@ function App() {
               {pages.map((page) => {
                 const El = pageComps[page.split(' ').join('')]
                 return(
-                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} getUser={getUser} getRoster={getRoster} getTeamName={getTeamName} FullPlayerList={FullPlayerList} />} />
+                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} FullPlayerList={FullPlayerList} />} />
                 )
               })}
             </Routes>
           </Box>
 
         </>)}
-
-      
     </Box>
   );
 }

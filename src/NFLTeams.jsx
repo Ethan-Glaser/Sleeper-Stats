@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Box, List, ListItem, Typography} from '@mui/material'
-import NFLTeam from './NFLTeam'
+import NFLTeam from './objects/NFLTeam'
 
 function NFLTeams() {
 
