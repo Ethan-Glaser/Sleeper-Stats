@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/Sleeper-Stats/static/js/main.73b71940.js",
+    "main.js": "/Sleeper-Stats/static/js/main.d87cc503.js",
     "index.html": "/Sleeper-Stats/index.html",
-    "main.73b71940.js.map": "/Sleeper-Stats/static/js/main.73b71940.js.map"
+    "main.d87cc503.js.map": "/Sleeper-Stats/static/js/main.d87cc503.js.map"
   },
   "entrypoints": [
-    "static/js/main.73b71940.js"
+    "static/js/main.d87cc503.js"
   ]
 }
