@@ -31,10 +31,13 @@ function App() {
   },[])
 
   async function setAllPlayers(d) {
-    let list = Object.keys(JSONPlayers).filter(itm => JSONPlayers[itm].active && ['QB', 'RB', 'WR', 'TE'].includes(JSONPlayers[itm].position) && JSONPlayers[itm].team)
+    let list = Object.keys(JSONPlayers).filter(itm => JSONPlayers[itm].active && ['QB', 'RB', 'WR', 'TE'].includes(JSONPlayers[itm].position) && JSONPlayers[itm].team && JSONPlayers[itm].depth_chart_order)
     let players = []
     for(let i = 0; i < list.length; i++){
       let p = new Player(list[i])
+      if(p.name === 'Ben Roethlisberger'){
+        console.log(JSONPlayers[list[i]].active + ' ' + JSONPlayers[list[i]].team)
+      }
       await p.fetchSeasonStats(d)
       players.push(p)
     }

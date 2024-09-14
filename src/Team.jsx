@@ -34,6 +34,9 @@ function Team(props) {
     let tmplist = []
     list.forEach((value, index, arr)=>{
       let p = new Player(value)
+      if(p.team === null){
+        console.log(p.name)
+      }
       tmplist.push(
         <BoxListItem
           sx={{

@@ -2,13 +2,22 @@ import ESPNTeams from '../data/ESPNTeams.json';
 
 class Team {
     constructor(abv) {
-        let x = ESPNTeams.sports[0].leagues[0].teams.find(obj => obj.team.abbreviation === abv);
-        this._name = x.team.name;
-        this._abbreviation = x.team.abbreviation;
-        this._location = x.team.location;
-        this._color = x.team.color;
-        this._altcolor = x.team.alternateColor;
-        this._ESPNID = x.team.id;
+        if(abv !== 'FA'){
+            let x = ESPNTeams.sports[0].leagues[0].teams.find(obj => obj.team.abbreviation === abv);
+            this._name = x.team.name;
+            this._abbreviation = x.team.abbreviation;
+            this._location = x.team.location;
+            this._color = x.team.color;
+            this._altcolor = x.team.alternateColor;
+            this._ESPNID = x.team.id;
+        } else {
+            this._name = 'Agent';
+            this._abbreviation = 'FA';
+            this._location = 'Free';
+            this._color = '777';
+            this._altcolor = 'ddd';
+            this._ESPNID = -1;
+        }
     }
 
     // Getter and Setter for name

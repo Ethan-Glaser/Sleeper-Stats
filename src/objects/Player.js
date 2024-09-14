@@ -30,7 +30,7 @@ class Player {
         this._position = p.position;
         let t = p.team
         if(t === 'WAS') t = 'WSH'           //Washington Commanders issue
-        if(t) this._team = new NFLTeam(t); else this._team = null;
+        if(t) this._team = new NFLTeam(t); else this._team = new NFLTeam('FA');
         this._number = p.number;
         this._age = p.age;
         this._sleeperID = id;

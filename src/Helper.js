@@ -1,3 +1,40 @@
+
+
+export const nflTeamAbbreviations = [
+    "ARI", // Arizona Cardinals
+    "ATL", // Atlanta Falcons
+    "BAL", // Baltimore Ravens
+    "BUF", // Buffalo Bills
+    "CAR", // Carolina Panthers
+    "CHI", // Chicago Bears
+    "CIN", // Cincinnati Bengals
+    "CLE", // Cleveland Browns
+    "DAL", // Dallas Cowboys
+    "DEN", // Denver Broncos
+    "DET", // Detroit Lions
+    "GB",  // Green Bay Packers
+    "HOU", // Houston Texans
+    "IND", // Indianapolis Colts
+    "JAX", // Jacksonville Jaguars
+    "KC",  // Kansas City Chiefs
+    "LV",  // Las Vegas Raiders
+    "LAC", // Los Angeles Chargers
+    "LAR", // Los Angeles Rams
+    "MIA", // Miami Dolphins
+    "MIN", // Minnesota Vikings
+    "NE",  // New England Patriots
+    "NO",  // New Orleans Saints
+    "NYG", // New York Giants
+    "NYJ", // New York Jets
+    "PHI", // Philadelphia Eagles
+    "PIT", // Pittsburgh Steelers
+    "SF",  // San Francisco 49ers
+    "SEA", // Seattle Seahawks
+    "TB",  // Tampa Bay Buccaneers
+    "TEN", // Tennessee Titans
+    "WSH"  // Washington Commanders
+  ];
+
 export function lightenColor(hex, percent) {
     // Convert hex to RGB
     const num = parseInt(hex.slice(1), 16),
@@ -46,4 +83,41 @@ export function getRoster(id, Rosters){
         }
     }
     console.log('No roster found ' + id)
+}
+
+export function getTeamShare(abv, AllPlayers) {
+    return AllPlayers
+        .filter(p => p.team.abbreviation === abv)
+        .sort((a, b) => {
+            const aReceiving = a.seasonStats.find(obj => obj.name === 'receiving');
+            const bReceiving = b.seasonStats.find(obj => obj.name === 'receiving');
+            
+            const aTargets = aReceiving ? aReceiving.stats.find(obj => obj.name === 'receivingTargets') : null;
+            const bTargets = bReceiving ? bReceiving.stats.find(obj => obj.name === 'receivingTargets') : null;
+            
+            const aValue = aTargets ? aTargets.value : 0; // Default to 0 if no value found
+            const bValue = bTargets ? bTargets.value : 0; // Default to 0 if no value found
+            
+            return bValue - aValue;
+        });
+}
+
+export function getTeamSplit(abv, AllPlayers) {
+    return AllPlayers
+        .filter(p => p.team.abbreviation === abv).filter(p => p.seasonStats.length > 0 && p.seasonStats.find(obj => obj.name === 'rushing'))
+        .sort((a, b) => {
+            const aReceiving = a.seasonStats.find(obj => obj.name === 'rushing');
+            const bReceiving = b.seasonStats.find(obj => obj.name === 'rushing');
+            
+            const aTargets = aReceiving ? aReceiving.stats.find(obj => obj.name === 'rushingAttempts') : null;
+            const bTargets = bReceiving ? bReceiving.stats.find(obj => obj.name === 'rushingAttempts') : null;
+            
+            const aValue = aTargets ? aTargets.value : 0; // Default to 0 if no value found
+            const bValue = bTargets ? bTargets.value : 0; // Default to 0 if no value found
+            
+            return bValue - aValue;
+        });
+
+
+
 }
