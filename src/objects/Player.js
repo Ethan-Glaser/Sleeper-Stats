@@ -1,6 +1,7 @@
 import JSONPlayers from '../data/JSONPlayers.json';
 import JSONESPNPlayers from '../data/JSONESPNPlayers.json'
 import NFLTeam from './NFLTeam'
+import { safeStat } from '../Helper';
 
 /*
 
@@ -36,6 +37,7 @@ class Player {
         this._sleeperID = id;
         this._seasonStats = [];
         this._weeklyStats = [];
+        this._points = {'pass': 0, 'rush': 0, 'rec': 0}
         let x 
         if(p.number) x = JSONESPNPlayers.items.find(obj => obj.fullName.includes(p.first_name + ' ' + p.last_name) && obj.jersey === p.number.toString()); else x=null
         if(x) this._espnID = x.id; else this._espnID = null;
@@ -139,6 +141,51 @@ class Player {
 
     set weeklyStats(newStat){
         this._weeklyStats =newStat
+    }
+
+    get points(){
+        return this._points
+    }
+
+    set points(newPoints){
+        this._points = newPoints
+    }
+
+    async calcScore(scoreSettings, week){
+        if(week === 0){
+            if(this.seasonStats.length <= 0) this._points = {'pass': 0, 'rush': 0, 'rec': 0}; else {
+            let pass = 0
+            let rush = 0
+            let rec = 0
+
+
+            pass += scoreSettings['pass_int'] * safeStat(this._seasonStats, 'passing', 'interceptions')
+            pass += scoreSettings['pass_2pt'] * safeStat(this._seasonStats, 'passing', 'twoPtPass')
+            pass += scoreSettings['pass_yd'] * safeStat(this._seasonStats, 'passing', 'passingYards')
+            pass += scoreSettings['pass_td'] * safeStat(this._seasonStats, 'passing', 'passingTouchdowns')
+            pass += scoreSettings['fum'] * safeStat(this._seasonStats, 'passing', 'passingFumbles')
+
+
+            rush += scoreSettings['rush_td'] * safeStat(this._seasonStats, 'rushing', 'rushingTouchdowns') 
+            rush += scoreSettings['rush_yd'] * safeStat(this._seasonStats, 'rushing', 'rushingYards') 
+            rush += scoreSettings['rush_td'] * safeStat(this._seasonStats, 'rushing', 'twoPtRush') 
+            rush += scoreSettings['fum'] * safeStat(this._seasonStats, 'rushing', 'rushingFumbles')
+            
+
+
+            rec += scoreSettings['rec_2pt'] * safeStat(this._seasonStats, 'receiving', 'twoPointRecConvs')
+            rec += scoreSettings['rec'] * safeStat(this._seasonStats, 'receiving', 'receptions')
+            rec += scoreSettings['rec_td'] * safeStat(this._seasonStats, 'receiving', 'receivingTouchdowns')
+            rec += scoreSettings['fum'] * safeStat(this._seasonStats, 'receiving', 'receivingFumbles')
+            rec += scoreSettings['rec_yd'] * safeStat(this._seasonStats, 'receiving', 'receivingYards')
+
+            console.log(pass, rush, rec)
+            
+            this._points = {'pass': Math.round(pass *100) /100, 'rush': Math.round(rush *100) /100, 'rec': Math.round(rec *100) /100}
+            }
+        } else{
+        this._points = {'pass': 0, 'rush': 0, 'rec': 0}
+        }
     }
 
     async fetchWeeklyStats(season){

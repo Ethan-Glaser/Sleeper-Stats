@@ -20,6 +20,7 @@ function App() {
   const [LeagueID, setLeagueID] = useState('')
   const [Users, setUsers] = useState([])
   const [Rosters, setRosters] = useState([])
+  const [LeagueObj, setLeagueObj] = useState({})
 
   const [FullPlayerList, setFullPlayerList] = useState([])
 
@@ -27,21 +28,24 @@ function App() {
   const pageComps = {League, Team, Players, NFLTeams, ComparePlayers}
 
   useEffect(() => {
+    //console.log('loading')
     fetchState()
   },[])
 
-  async function setAllPlayers(d) {
-    let list = Object.keys(JSONPlayers).filter(itm => JSONPlayers[itm].active && ['QB', 'RB', 'WR', 'TE'].includes(JSONPlayers[itm].position) && JSONPlayers[itm].team && JSONPlayers[itm].depth_chart_order)
-    let players = []
-    for(let i = 0; i < list.length; i++){
-      let p = new Player(list[i])
-      if(p.name === 'Ben Roethlisberger'){
-        console.log(JSONPlayers[list[i]].active + ' ' + JSONPlayers[list[i]].team)
+  async function setAllPlayers(d) {      
+      let list = Object.keys(JSONPlayers).filter(itm => JSONPlayers[itm].active && ['QB', 'RB', 'WR', 'TE'].includes(JSONPlayers[itm].position) && JSONPlayers[itm].team && JSONPlayers[itm].depth_chart_order)
+      let players = []
+      for(let i = 0; i < list.length; i++){
+        //try{
+          let p = new Player(list[i])
+          await p.fetchSeasonStats(d)
+          //p.calcScore(LeagueObj.scoring_settings, 0)
+          players.push(p)
+        //} catch (error){
+        //  console.error(error)
+        //}
       }
-      await p.fetchSeasonStats(d)
-      players.push(p)
-    }
-    setFullPlayerList(players)
+      setFullPlayerList(players)
   }
 
   async function fetchState(){
@@ -52,7 +56,8 @@ function App() {
       }
       const data = await response.json()
       setNFLState(data)
-      setAllPlayers(data.league_season)
+      //if(LeagueObj.scoring_settings) 
+      setAllPlayers(data.league_season);
     } catch (error) {
       console.error('Error:',error)
     }
@@ -72,7 +77,7 @@ function App() {
     >
       
       { UserID === '' && (<UserLogin setUserID={setUserID} />)}
-      { UserID !== '' && LeagueID === '' && (<LeagueSelect setLeagueID={setLeagueID} UserID={UserID} NFLState={NFLState} setUsers={setUsers} setRosters={setRosters} />)}
+      { UserID !== '' && LeagueID === '' && (<LeagueSelect setLeagueID={setLeagueID} UserID={UserID} NFLState={NFLState} setUsers={setUsers} setRosters={setRosters} FullPlayerList={FullPlayerList} setLeagueObj={setLeagueObj} />)}
       { UserID !== '' && LeagueID !== '' && Users && Rosters && Users.length > 0 && Rosters.length > 0 && (
         <>
           <NavBar pages={pages} setUserID={setUserID} setLeagueID={setLeagueID} setUsers={setUsers} setRosters={setRosters} />
@@ -91,7 +96,7 @@ function App() {
               {pages.map((page) => {
                 const El = pageComps[page.split(' ').join('')]
                 return(
-                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} FullPlayerList={FullPlayerList} />} />
+                  <Route path={page.split(' ').join('').toLowerCase()} element={<El UserID={UserID} LeagueID={LeagueID} NFLState={NFLState} Users={Users} Rosters={Rosters} FullPlayerList={FullPlayerList} LeagueObj={LeagueObj} />} />
                 )
               })}
             </Routes>

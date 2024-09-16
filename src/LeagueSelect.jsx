@@ -51,16 +51,33 @@ function LeagueSelect(props) {
         }
     }
 
+    async function fetchLeague(id){
+        try{
+            const response = await fetch('https://api.sleeper.app/v1/league/'+ id)
+            if (!response.ok){
+                throw new Error('League Fetch Error')
+            }
+            const data = await response.json()
+            for(let p in props.FullPlayerList){
+                await props.FullPlayerList[p].calcScore(data.scoring_settings, 0)
+            }
+        } catch (error){
+            console.error('Error:', error)
+        }
+    }
+
     async function leagueClick(id){
         props.setLeagueID(id)
+        await fetchLeague(id)
         await fetchRosters(id)
         await fetchUsers(id)
+        
     }
 
 
     let LeagueList
 
-    if (Leagues && Leagues.length > 0){
+    if (Leagues && Leagues.length > 0 && props.FullPlayerList.length > 0){
         LeagueList = Leagues.map((league) => (
             <ListItemButton 
                 onClick={() => leagueClick(league.league_id)}
@@ -96,7 +113,7 @@ function LeagueSelect(props) {
             </ListItemButton>
         ))
     } else {
-        LeagueList = <></>
+        LeagueList = <>loading</>
     }
 
    

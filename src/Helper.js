@@ -85,6 +85,56 @@ export function getRoster(id, Rosters){
     console.log('No roster found ' + id)
 }
 
+export function safeStat(seasonStats, cat, stat){
+    try{
+        //console.log(seasonStats)
+        return seasonStats.find(obj => obj.name === cat).stats.find(obj => obj.name === stat).value
+    }catch (error){
+        console.error(error)
+        return 0
+    }
+}
+
+export function calcScore(scoreSettings, player, week){
+    if(week === 0){
+        if(player.seasonStats.length <= 0) return {'pass': 0, 'rush': 0, 'rec': 0};
+        let pass = 0
+        let rush = 0
+        let rec = 0
+
+        pass += scoreSettings['pass_int'] * safeStat(player.seasonStats, 'passing', 'interceptions')
+        pass += scoreSettings['pass_int'] * safeStat(player.seasonStats, 'passing', 'twoPtPass')
+        pass += scoreSettings['pass_int'] * safeStat(player.seasonStats, 'passing', 'passingYards')
+        pass += scoreSettings['pass_int'] * safeStat(player.seasonStats, 'passing', 'passingTouchdowns')
+        pass += scoreSettings['pass_int'] * safeStat(player.seasonStats, 'passing', 'passingFumbles')
+        /*
+        pass += scoreSettings['pass_int'] * player.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'interceptions').value// "pass_int"
+        pass += scoreSettings['pass_2pt'] * player.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'twoPtPass').value// "pass_2pt"
+        pass += scoreSettings['pass_yd'] * player.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingYards').value// "pass_yd"
+        pass += scoreSettings['pass_td'] * player.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingTouchdowns').value// "pass_td"
+        pass += scoreSettings['fum'] * player.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingFumbles').value// "fum"
+        
+
+        
+        rush += scoreSettings['rush_td'] * player.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingTouchdowns').value// "rush_td"
+        rush += scoreSettings['rush_yd'] * player.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingYards').value// "rush_yd"
+        rush += scoreSettings['rush_td'] * player.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'twoPtRush').value// "rush_2pt"
+        rush += scoreSettings['fum'] * player.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingFumbles').value// "fum"
+
+
+        rec += scoreSettings['rec_2pt'] * player.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'twoPointRecConvs').value// "rec_2pt"
+        rec += scoreSettings['rec'] * player.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receptions').value// "rec"
+        rec += scoreSettings['rec_td'] * player.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTouchdowns').value// "rec_td"
+        rec += scoreSettings['fum'] * player.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingFumbles').value// "fum"
+        rec += scoreSettings['rec_yd'] * player.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingYards').value// "rec_yd"
+        */
+        
+        console.log({'pass': pass, 'rush': rush, 'rec': rec})
+        return {'pass': Math.round(pass *100) /100, 'rush': Math.round(rush *100) /100, 'rec': Math.round(rec *100) /100}
+    }
+    return {'pass': 0, 'rush': 0, 'rec': 0}
+}
+
 export function getTeamShare(abv, AllPlayers) {
     return AllPlayers
         .filter(p => p.team.abbreviation === abv)

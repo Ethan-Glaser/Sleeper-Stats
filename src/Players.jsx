@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableFooter,  TablePagination, TableSortLabel, Typography, TextField} from '@mui/material'
-import { getTeamShare, getTeamSplit, nflTeamAbbreviations } from './Helper'
+import { getTeamShare, getTeamSplit, nflTeamAbbreviations, safeStat } from './Helper'
 import ContentBox from './style/ContentBox'
 
 function Players(props) {
@@ -14,20 +14,21 @@ function Players(props) {
   const [filter, setFilter] = useState({'name':'', 'position': '', 'team':''})
 
   useEffect(()=>{
+    
+    if(Object.keys(TeamShares).length <=0){
+      let sl = []
+      let sh = []
+      for(let abv in nflTeamAbbreviations){
+        sl[nflTeamAbbreviations[abv]] = getTeamSplit(nflTeamAbbreviations[abv], props.FullPlayerList)
+        sh[nflTeamAbbreviations[abv]] = getTeamShare(nflTeamAbbreviations[abv], props.FullPlayerList)
+      }
+      setTeamShares(sh)
+      setTeamSplits(sl)
+    }
     let l = applyFilterAndSort(props.FullPlayerList)
     setPlayerList(l)
     setDisplayPlayerList(l.slice(0 * 10, (0 + 1) * numberRows))
-    let sl = []
-    let sh = []
-    if(TeamShares.length <=0){
-    for(let abv in nflTeamAbbreviations){
-      sl[nflTeamAbbreviations[abv]] = getTeamSplit(nflTeamAbbreviations[abv], props.FullPlayerList)
-      sh[nflTeamAbbreviations[abv]] = getTeamShare(nflTeamAbbreviations[abv], props.FullPlayerList)
-
-    }
-    }
-    setTeamShares(sh)
-    setTeamSplits(sl)
+    
   },[props.FullPlayerList, sortConfig, filter])
 
   const handleChangePage = (event, p)=>{
@@ -64,7 +65,15 @@ function Players(props) {
       } else if(cat === 'rec'){
         aVal = getNestedStat(a, 'receiving', stat)
         bVal = getNestedStat(b, 'receiving', stat)
-      } else{
+      } else if(cat === 'points'){
+        if(stat === 'total'){
+          aVal = a.points.pass + a.points.rush + a.points.rec
+          bVal = b.points.pass + b.points.rush + b.points.rec
+        } else{
+          aVal = a.points[stat]
+          bVal = b.points[stat]
+        }
+      }else{
         aVal = a[stat]
         bVal = b[stat]
       }
@@ -113,7 +122,24 @@ function Players(props) {
    
   if(DisplayPlayerList && DisplayPlayerList.length> 0){
     rows = DisplayPlayerList.map((p) => {
-      try{
+        let rspl, rshar, ftar
+        try{
+          rspl = Math.round(safeStat(TeamSplits[p.team.abbreviation].find(obj => obj.name === p.name).seasonStats, 'rushing', 'rushingAttempts') / (TeamSplits[p.team.abbreviation].reduce((sum, x) => sum + safeStat(x.seasonStats, 'rushing', 'rushingAttempts') ,0)) * 10000)/100
+        } catch (error){
+          rspl = 0
+        }
+        try{
+          rshar = Math.round(safeStat(TeamShares[p.team.abbreviation].find(obj => obj.name === p.name).seasonStats, 'receiving', 'receivingTargets') / (TeamShares[p.team.abbreviation].reduce((sum, x) => sum + safeStat(x.seasonStats, 'receiving', 'receivingTargets') ,0)) * 10000)/100
+        } catch (error){
+          rshar = 0
+        }
+        try{
+          ftar = p.position === 'QB' ? TeamShares[p.team.abbreviation][0].name : <>N/A</>
+        } catch(error){
+          ftar = <>N/A</>
+        }
+
+        
         return(
         <TableRow>
           <TableCell>
@@ -126,148 +152,75 @@ function Players(props) {
             {p.team.location+ ' ' + p.team.name}
           </TableCell>
           <TableCell >
-            <>points</>
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingYards').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingTouchdowns').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'completions').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'passingAttempts').value}
-          </TableCell>
-          <TableCell>
-            {Math.round(p.seasonStats.find(obj => obj.name === 'passing').stats.find(obj => obj.name === 'completionPct').value * 100) /100}
-          </TableCell>
-          <TableCell>
-            {p.position === 'QB' ? TeamShares[p.team.abbreviation][0].name : <>N/A</>}
-          </TableCell>
-          <TableCell>
-            <>points</>
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingYards').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingTouchdowns').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingAttempts').value}
-          </TableCell>
-          <TableCell>
-            {Math.round(p.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'yardsPerRushAttempt').value * 100) / 100}
-          </TableCell>
-          <TableCell>
-            {Math.round((TeamSplits[p.team.abbreviation].find(obj => obj.name === p.name).seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingAttempts').value) / (TeamSplits[p.team.abbreviation].reduce((sum, x) => sum + x.seasonStats.find(obj => obj.name === 'rushing').stats.find(obj => obj.name === 'rushingAttempts').value ,0)) * 10000)/100}
-          </TableCell>
-          <TableCell>
-            <>points</>
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingYards').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTouchdowns').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receptions').value}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTargets').value}
-          </TableCell>
-          <TableCell>
-            {Math.round(p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receptions').value/p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTargets').value *10000) / 100}
-          </TableCell>
-          <TableCell>
-            {p.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingYardsAfterCatch').value}
-          </TableCell>
-          <TableCell>
-            {Math.round((TeamSplits[p.team.abbreviation].find(obj => obj.name === p.name).seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTargets').value) / (TeamSplits[p.team.abbreviation].reduce((sum, x) => sum + x.seasonStats.find(obj => obj.name === 'receiving').stats.find(obj => obj.name === 'receivingTargets').value ,0)) * 10000)/100}
-          </TableCell>
-        </TableRow>
-        )
-      } catch (error){
-        return(
-          <TableRow>
-          <TableCell>
-            {p.name}
-          </TableCell>
-          <TableCell>
-            {p.position}
-          </TableCell>
-          <TableCell>
-            {p.team.location+ ' ' + p.team.name}
+            {Math.round((p.points.pass + p.points.rush + p.points.rec)*100)/100}
+            
           </TableCell>
           <TableCell >
-            0
+            {p.points.pass}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'passing', 'passingYards')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'passing', 'passingTouchdowns')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'passing', 'completions')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'passing', 'passingAttempts')}
           </TableCell>
           <TableCell>
-            0
+            {Math.round(safeStat(p.seasonStats, 'passing', 'completionPct') * 100) /100}
           </TableCell>
           <TableCell>
-            <>N/A</>
+            {ftar}
           </TableCell>
           <TableCell>
-            0
+            {p.points.rush}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'rushing', 'rushingYards')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'rushing', 'rushingTouchdowns')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'rushing', 'rushingAttempts')}
           </TableCell>
           <TableCell>
-            0
+            {Math.round(safeStat(p.seasonStats, 'rushing', 'yardsPerRushAttempt') * 100) / 100}
           </TableCell>
           <TableCell>
-            0
+            {rspl}
           </TableCell>
           <TableCell>
-            0
+            {p.points.rec}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'receiving', 'receivingYards')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'receiving', 'receivingTouchdowns')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'receiving', 'receptions')}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'receiving', 'receivingTargets')}
           </TableCell>
           <TableCell>
-            0
+            {Math.round(safeStat(p.seasonStats, 'receiving', 'receptions')/safeStat(p.seasonStats, 'receiving', 'receivingTargets') *10000)/100}
           </TableCell>
           <TableCell>
-            0
+            {safeStat(p.seasonStats, 'receiving', 'receivingYardsAfterCatch')}
           </TableCell>
           <TableCell>
-            0
+            {rshar}
           </TableCell>
         </TableRow>
         )
-      }
+      
   })
   } else{
     rows = <>loading</>
@@ -311,6 +264,7 @@ function Players(props) {
               <TableCell colSpan={1}></TableCell>
               <TableCell colSpan={1}></TableCell>
               <TableCell colSpan={1}></TableCell>
+              <TableCell colSpan={1}></TableCell>
               <TableCell colSpan={7}>Passing</TableCell>
               <TableCell colSpan={6}>Rushing</TableCell>
               <TableCell colSpan={8}>Recieving</TableCell>
@@ -332,7 +286,22 @@ function Players(props) {
                 Team
               </TableCell>
               <TableCell>
-                Points
+                <TableSortLabel
+                  active={sortConfig.key === 'points.total'}
+                  direction={sortConfig.key === 'points.total' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSort('points.total')}
+                >
+                  Total Points
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.key === 'points.pass'}
+                  direction={sortConfig.key === 'points.pass' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSort('points.pass')}
+                >
+                  Passing Points
+                </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -383,7 +352,13 @@ function Players(props) {
                 Favorite Target
               </TableCell>
               <TableCell>
-                Points
+                <TableSortLabel
+                  active={sortConfig.key === 'points.rush'}
+                  direction={sortConfig.key === 'points.rush' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSort('points.rush')}
+                >
+                  Rushing Points
+                </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -431,7 +406,13 @@ function Players(props) {
                   </TableSortLabel>
               </TableCell>
               <TableCell>
-                Points
+                <TableSortLabel
+                  active={sortConfig.key === 'points.rec'}
+                  direction={sortConfig.key === 'points.rec' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSort('points.rec')}
+                >
+                  Receiving Points
+                </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
@@ -505,7 +486,7 @@ function Players(props) {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[10, 20, 50, { label: 'All', value: -1 }]}
-                colSpan={24}
+                colSpan={25}
                 count={PlayerList.length}
                 rowsPerPage={numberRows}
                 page={page}
